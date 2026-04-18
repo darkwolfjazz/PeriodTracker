@@ -20,7 +20,7 @@ public class Profile {
 
 
 @OneToOne
-@JoinColumn(name = "user_id",nullable = false)
+@JoinColumn(name = "userId",nullable = false)
 private User user;
 private int age;
 private double height;

@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "periods_cycle_table")
+@Table(name = "cycles")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,9 +20,15 @@ public class Cycle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "userId",nullable = false)
     private User user;
     private LocalDate startDate;
-    private LocalDate createdAt;
+    private LocalDate endDate;
+    private int cycleLength;         // actual (can differ from profile)
+    private int periodDuration;      // actual
+    // Calculated fields (optional but useful)
+    private LocalDate ovulationDate;
+    private LocalDate nextPeriodDate;
 
+    private LocalDate createdAt;
 }
