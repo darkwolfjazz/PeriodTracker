@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CycleRequestDTO {
-    private Long userId;
     private LocalDate lastPeriodDate;
     // optional (if user wants to override defaults)
     private Integer cycleLength;

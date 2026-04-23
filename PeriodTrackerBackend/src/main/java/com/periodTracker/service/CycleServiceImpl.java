@@ -1,9 +1,6 @@
 package com.periodTracker.service;
 
-import com.periodTracker.dto.CycleRequestDTO;
-import com.periodTracker.dto.CycleResponseDTO;
-import com.periodTracker.dto.FullCycleResponse;
-import com.periodTracker.dto.PhaseRecommendationDTO;
+import com.periodTracker.dto.*;
 import com.periodTracker.entity.Cycle;
 import com.periodTracker.entity.Profile;
 import com.periodTracker.entity.User;
@@ -11,6 +8,8 @@ import com.periodTracker.repository.CycleRepository;
 import com.periodTracker.repository.ProfileRepository;
 import com.periodTracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,8 +31,10 @@ public class CycleServiceImpl implements CycleService {
     @Override
     public FullCycleResponse createCycle(CycleRequestDTO request) {
         //fetching user
-        User user=userRepository.
-                findById(request.getUserId()).orElseThrow(()->new RuntimeException("User not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authentication value is : " +authentication);
+        User user = (User) authentication.getPrincipal();
+        System.out.println("Principal is : " +user);
         //fetching profile
         Profile profile=profileRepository
                 .findByUserUserId(user.getUserId()).orElseThrow(()->new RuntimeException("Profile not found"));
@@ -117,6 +118,70 @@ public class CycleServiceImpl implements CycleService {
                 dto.setDiet(List.of("Magnesium rich food", "Dark chocolate"));
                 break;
         }
+        return dto;
+    }
+    @Override
+    public List<CycleHistoryDTO> getCycleHistory() {
+       //Step1:get logged in user
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        User user=(User)authentication.getPrincipal();
+        //Step 2: Fetch cycles
+        List<Cycle>cycles=cycleRepository.findByUserUserIdOrderByStartDateDesc(user.getUserId());
+
+       //Step3 : Convert to DTO
+        return cycles.stream().map(cycle -> {
+            CycleHistoryDTO dto = new CycleHistoryDTO();
+            dto.setPeriodStart(cycle.getStartDate());
+            dto.setPeriodEnd(cycle.getEndDate());
+            dto.setOvulationDate(cycle.getOvulationDate());
+            dto.setNextPeriodDate(cycle.getNextPeriodDate());
+            dto.setCycleLength(cycle.getCycleLength());
+            dto.setPeriodDuration(cycle.getPeriodDuration());
+
+            return dto;
+        }).toList();
+    }
+
+    @Override
+    public DashboardResponseDTO getDashboard() {
+        // 1. Get logged-in user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // 2. Get latest cycle
+        List<Cycle> cycles = cycleRepository
+                .findByUserUserIdOrderByStartDateDesc(user.getUserId());
+
+        if (cycles.isEmpty()) {
+            throw new RuntimeException("No cycle data found");
+        }
+
+        Cycle latestCycle = cycles.get(0);
+
+        // 3. Calculate day of cycle
+        long days = ChronoUnit.DAYS.between(latestCycle.getStartDate(), LocalDate.now());
+        int dayOfCycle = (int) (days % latestCycle.getCycleLength());
+
+        // 4. Detect phase
+        String phase = getCurrentPhase(
+                latestCycle.getStartDate(),
+                latestCycle.getCycleLength(),
+                latestCycle.getPeriodDuration()
+        );
+
+        // 5. Get recommendations
+        PhaseRecommendationDTO recommendation = getRecommendation(phase);
+
+        // 6. Build response
+        DashboardResponseDTO dto = new DashboardResponseDTO();
+        dto.setPeriodStart(latestCycle.getStartDate());
+        dto.setPeriodEnd(latestCycle.getEndDate());
+        dto.setOvulationDate(latestCycle.getOvulationDate());
+        dto.setNextPeriodDate(latestCycle.getNextPeriodDate());
+        dto.setDayOfCycle(dayOfCycle);
+        dto.setCurrentPhase(phase);
+        dto.setWorkouts(recommendation.getWorkouts());
+        dto.setDiet(recommendation.getDiet());
         return dto;
     }
 }
