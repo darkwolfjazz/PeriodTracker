@@ -3,16 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { DashboardService } from '../../services/dashboard';
 
 @Component({
   selector: 'app-auth',
+  standalone:true,
   imports: [FormsModule],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })
 export class Auth {
 
-constructor(private authService:AuthService,private router:Router){
+constructor(private authService:AuthService,private router:Router,private dashboardService:DashboardService){
 }
 isLoginMode=false;
 
@@ -42,7 +44,10 @@ onSubmit(){
       next:(res:any)=>{
         console.log("Login successful!",res);
         localStorage.setItem('token',res.token);
-        this.router.navigate(['/dashboard']);
+        //this.resetLoginForm();
+       setTimeout(() => {
+     this.checkCycleData();
+     }, 0);
       },
       error:(err)=>{
         console.log(err);
@@ -54,7 +59,9 @@ onSubmit(){
     this.authService.signUp(this.signUpData).subscribe({
       next:(res)=>{
         console.log("Signup success!")
-        alert("Signup successful , Please login");
+        localStorage.removeItem('token');
+        this.resetSignupForm();
+        this.resetLoginForm();
         this.isLoginMode=true;
       },
       error:(err)=>{
@@ -64,5 +71,42 @@ onSubmit(){
     })
   }
 }
+
+
+resetSignupForm() {
+  this.signUpData = {
+    username: '',
+    password: '',
+    age: null,
+    height: null,
+    weight: null,
+    cycleLength: null,
+    periodDuration: null
+  };
+}
+
+resetLoginForm() {
+  this.loginData = {
+    username: '',
+    password: ''
+  };
+}
+
+
+checkCycleData(){
+  this.dashboardService.getDashboard().subscribe({
+     next:()=>{
+      this.router.navigate(['/dashboard'],{replaceUrl:true});
+     },
+     error:(err)=>{
+      if(err.status===404 || err.status===403){
+        this.router.navigate(['/cycle-setup'],{replaceUrl:true})
+      }
+     }
+  })
+}
+
+
+
 
 }

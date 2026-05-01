@@ -1,0 +1,39 @@
+<div class="setup-container">
+
+  <h2>Setup Your Cycle</h2>
+
+
+  <!-- Date Picker -->
+  <mat-form-field appearance="outline">
+    <mat-label>Last Period Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="cycleData.lastPeriodDate"
+    >
+    <mat-datepicker-toggle
+      matIconSuffix
+      [for]="picker">
+    </mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <!-- Cycle Length -->
+  <mat-form-field appearance="outline">
+    <mat-label>Cycle Length</mat-label>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="cycleData.cycleLength">
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+
+    <mat-label>Period Duration</mat-label>
+
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="cycleData.periodDuration">
+  </mat-form-field>
+  <button mat-raised-button (click)="submit()">Save</button>
+
+</div>

@@ -1,1 +1,29 @@
-<p>dashboard works!</p>
+
+<button (click)="logout()">Logout</button>
+<div class="dashboard-container">
+  <h2>My Cycle Dashboard</h2>
+  <div class="card">
+    <p><strong>Period Start:</strong> {{ dashboardData.periodStart }}</p>
+    <p><strong>Period End:</strong> {{ dashboardData.periodEnd }}</p>
+    <p><strong>Ovulation Date:</strong> {{ dashboardData.ovulationDate }}</p>
+    <p><strong>Next Period:</strong> {{ dashboardData.nextPeriodDate }}</p>
+    <p><strong>Current Day:</strong> Day {{ dashboardData.dayOfCycle }}</p>
+    <p><strong>Current Phase:</strong> {{ dashboardData.currentPhase }}</p>
+  </div>
+  <div class="card">
+    <h3>Recommended Workouts</h3>
+    <ul>
+      @for(workout of dashboardData.workouts; track workout) {
+        <li>{{ workout }}</li>
+      }
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Recommended Diet</h3>
+    <ul>
+      @for(food of dashboardData.diet; track food) {
+        <li>{{ food }}</li>
+      }
+    </ul>
+  </div>
+</div>

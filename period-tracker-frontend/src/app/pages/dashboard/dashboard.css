@@ -1,0 +1,11 @@
+.dashboard-container {
+  width: 700px;
+  margin: 40px auto;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
