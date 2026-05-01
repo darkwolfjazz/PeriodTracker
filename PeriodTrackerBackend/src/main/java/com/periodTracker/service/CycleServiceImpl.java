@@ -8,9 +8,11 @@ import com.periodTracker.repository.CycleRepository;
 import com.periodTracker.repository.ProfileRepository;
 import com.periodTracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -152,8 +154,9 @@ public class CycleServiceImpl implements CycleService {
         List<Cycle> cycles = cycleRepository
                 .findByUserUserIdOrderByStartDateDesc(user.getUserId());
 
+        System.out.println("Cycle count:" +cycles.size());
         if (cycles.isEmpty()) {
-            throw new RuntimeException("No cycle data found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No cycle data");
         }
 
         Cycle latestCycle = cycles.get(0);

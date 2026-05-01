@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cycle")
+@CrossOrigin("*")
 public class CycleController {
     @Autowired
     private CycleService cycleService;
