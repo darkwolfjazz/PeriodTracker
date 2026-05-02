@@ -56,4 +56,9 @@ logNewPeriod(){
 this.router.navigate(['/cycle-setup']);
 }
 
+openAura(){
+  this.router.navigate(['/ai-chat'])
+}
+
+
 }

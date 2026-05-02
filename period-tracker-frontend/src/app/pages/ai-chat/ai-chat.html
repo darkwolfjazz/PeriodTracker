@@ -1,0 +1,29 @@
+<div class="chat-container">
+  <h2>🌸 Talk to Aura</h2>
+  <button (click)="logout()">Logout</button>
+  <div class="chat-box">
+    @for (message of messages; track message) {
+      <div
+        class="message"
+        [class.user]="message.sender === 'user'"
+        [class.aura]="message.sender === 'aura'"
+      >
+        {{ message.text }}
+      </div>
+    }
+  </div>
+
+  @if (isLoading) {
+    <p>Aura is typing...</p>
+  }
+
+  <div class="input-box">
+    <input
+      [(ngModel)]="userMessage"
+      placeholder="Ask Aura anything..."
+      (keyup.enter)="sendMessage()"
+    />
+
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>

@@ -60,4 +60,10 @@ formatDate(date: any): string {
     .split('T')[0];
 
 }
+logout(){
+   localStorage.removeItem('token');
+  this.router.navigate(['/'], {
+    replaceUrl: true
+  });
+}
 }
