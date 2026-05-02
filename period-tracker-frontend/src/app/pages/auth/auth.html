@@ -1,6 +1,6 @@
 <div class="auth-container">
   <h2>{{ isLoginMode ? 'Login' : 'Sign Up' }}</h2>
-  <form (submit)="onSubmit()">
+  <form (ngSubmit)="onSubmit()">
     @if(!isLoginMode){
     <div>
       <input type="text" placeholder="Username" 
@@ -17,12 +17,6 @@
       />
       <input type="number" placeholder="Weight (kg)" 
       [(ngModel)]="signUpData.weight" name="Weight"
-      />
-      <input type="number" placeholder="Cycle Length (days)" 
-      [(ngModel)]="signUpData.cycleLength" name="cycleLength"
-      />
-      <input type="number" placeholder="Period Duration (days)" 
-      [(ngModel)]="signUpData.periodDuration" name="periodDuration"
       />
     </div>
 }@else {

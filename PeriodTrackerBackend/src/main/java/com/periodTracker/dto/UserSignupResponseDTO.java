@@ -10,10 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSignupResponseDTO {
-
     private Long userId;
     private String username;
-    private int cycleLength;
-    private int periodDuration;
-
 }

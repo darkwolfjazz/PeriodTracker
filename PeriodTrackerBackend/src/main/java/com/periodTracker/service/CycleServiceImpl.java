@@ -42,17 +42,33 @@ public class CycleServiceImpl implements CycleService {
                 .findByUserUserId(user.getUserId()).orElseThrow(()->new RuntimeException("Profile not found"));
         int cycleLength = request.getCycleLength() != null
                 ? request.getCycleLength()
-                : profile.getCycleLength() != 0
+                : profile.getCycleLength() != null
                 ? profile.getCycleLength()
                 : 28;
 
         int periodDuration = request.getPeriodDuration() != null
                 ? request.getPeriodDuration()
-                : profile.getPeriodDuration() != 0
+                : profile.getPeriodDuration() != null
                 ? profile.getPeriodDuration()
                 : 5;
 
+        profile.setCycleLength(cycleLength);
+        profile.setPeriodDuration(periodDuration);
+        profileRepository.save(profile);
+
         LocalDate startDate=request.getLastPeriodDate();
+        if(startDate.isAfter(LocalDate.now())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Period start date cannot be a future date");
+        }
+
+        List<Cycle>existingCycle=cycleRepository.findByUserUserIdOrderByStartDateDesc(user.getUserId());
+        if(!existingCycle.isEmpty()){
+            Cycle latestCycle=existingCycle.get(0);
+            if(!startDate.isAfter(latestCycle.getStartDate())){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"New Period must be after previous cycle");
+            }
+        }
+
        //dates calculation
         LocalDate periodEnd = startDate.plusDays(periodDuration - 1);
         LocalDate ovulationDate = startDate.plusDays(cycleLength - 14);
@@ -87,13 +103,18 @@ public class CycleServiceImpl implements CycleService {
         return response;
     }
     //phase logic
-    private String getCurrentPhase(LocalDate startDate, int cycleLength, int periodDuration) {
-        long days = ChronoUnit.DAYS.between(startDate, LocalDate.now());
-        int day = (int) (days % cycleLength);
-        if (day < periodDuration) return "Menstrual";
-        else if (day < (cycleLength - 14)) return "Follicular";
-        else if (day == (cycleLength - 14)) return "Ovulation";
-        else return "Luteal";
+    private String getCurrentPhase(LocalDate startDate,int cycleLength,int periodDuration){
+       long days=ChronoUnit.DAYS.between(startDate,LocalDate.now());
+       int day=Math.floorMod((int)days,cycleLength);
+       if(day<periodDuration){
+           return "Menstrual";
+       }else if(day<(cycleLength-14)){
+          return "Follicular";
+       }else if(day==cycleLength-14){
+         return "Ovulation";
+       }else{
+           return "Luteal";
+       }
     }
     //recommendation MVP version
     private PhaseRecommendationDTO getRecommendation(String phase) {
@@ -129,7 +150,6 @@ public class CycleServiceImpl implements CycleService {
         User user=(User)authentication.getPrincipal();
         //Step 2: Fetch cycles
         List<Cycle>cycles=cycleRepository.findByUserUserIdOrderByStartDateDesc(user.getUserId());
-
        //Step3 : Convert to DTO
         return cycles.stream().map(cycle -> {
             CycleHistoryDTO dto = new CycleHistoryDTO();
@@ -139,7 +159,6 @@ public class CycleServiceImpl implements CycleService {
             dto.setNextPeriodDate(cycle.getNextPeriodDate());
             dto.setCycleLength(cycle.getCycleLength());
             dto.setPeriodDuration(cycle.getPeriodDuration());
-
             return dto;
         }).toList();
     }
@@ -163,18 +182,15 @@ public class CycleServiceImpl implements CycleService {
 
         // 3. Calculate day of cycle
         long days = ChronoUnit.DAYS.between(latestCycle.getStartDate(), LocalDate.now());
-        int dayOfCycle = (int) (days % latestCycle.getCycleLength());
-
+        int dayOfCycle = Math.floorMod((int)days, latestCycle.getCycleLength());
         // 4. Detect phase
         String phase = getCurrentPhase(
                 latestCycle.getStartDate(),
                 latestCycle.getCycleLength(),
                 latestCycle.getPeriodDuration()
         );
-
         // 5. Get recommendations
         PhaseRecommendationDTO recommendation = getRecommendation(phase);
-
         // 6. Build response
         DashboardResponseDTO dto = new DashboardResponseDTO();
         dto.setPeriodStart(latestCycle.getStartDate());

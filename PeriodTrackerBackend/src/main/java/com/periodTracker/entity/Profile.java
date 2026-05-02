@@ -25,7 +25,7 @@ private User user;
 private int age;
 private double height;
 private double weight;
-private int cycleLength;
-private int periodDuration;
+private Integer cycleLength;
+private Integer periodDuration;
 
 }

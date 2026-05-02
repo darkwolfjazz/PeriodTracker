@@ -1,0 +1,52 @@
+@if (isLoading) {
+  <h2>Loading history...</h2>
+} @else {
+  <div class="history-container">
+     <button (click)="logout()">Logout</button>
+    <h2>🌸 Cycle History</h2>
+
+    @for (cycle of history; track cycle.periodStart) {
+      <div class="history-card">
+        <p>
+          <strong> Period Start: </strong>
+
+          {{ cycle.periodStart }}
+        </p>
+
+        <p>
+          <strong> Period End: </strong>
+
+          {{ cycle.periodEnd }}
+        </p>
+
+        <p>
+          <strong> Ovulation: </strong>
+
+          {{ cycle.ovulationDate }}
+        </p>
+
+        <p>
+          <strong> Next Period: </strong>
+
+          {{ cycle.nextPeriodDate }}
+        </p>
+
+        <p>
+          <strong> Cycle Length: </strong>
+
+          {{ cycle.cycleLength }}
+
+          days
+        </p>
+
+        <p>
+          <strong> Duration: </strong>
+
+          {{ cycle.periodDuration }}
+
+          days
+        </p>
+      </div>
+    }
+  </div>
+}

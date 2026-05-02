@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -13,13 +13,11 @@ import { Router } from '@angular/router';
 export class Dashboard implements OnInit {
 
 
-constructor(private dashboardService:DashboardService,private router:Router){
+constructor(private dashboardService:DashboardService,private router:Router,private cdr:ChangeDetectorRef){
 
 }
-dashboardData: any = {
-  workouts: [],
-  diet: []
-};
+dashboardData: any = null;
+isLoading=true;
 
 ngOnInit():void{
  
@@ -27,9 +25,17 @@ this.dashboardService.getDashboard().subscribe({
   next:(res:any)=>{
     console.log("dashboard data" ,res);
     this.dashboardData=res;
+    console.log("setting loading false")
+    this.isLoading=false;
+    this.cdr.detectChanges();
+    console.log("loading false set done !")
   },
   error:(err)=>{
     console.log(err);
+    console.log("inside err block loading is about to set false")
+    this.isLoading=false;
+    this.cdr.detectChanges();
+    console.log("loading set to false inside err block !")
   }
 });
 
@@ -40,6 +46,14 @@ logout() {
   this.router.navigate(['/'], {
     replaceUrl: true
   });
+}
+
+gotoHistory(){
+this.router.navigate(['/history']);
+}
+
+logNewPeriod(){
+this.router.navigate(['/cycle-setup']);
 }
 
 }

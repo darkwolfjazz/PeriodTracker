@@ -10,6 +10,7 @@ import { CycleService } from '../../services/cycle-service';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-cycle-setup',
+  standalone:true,
   imports: [CommonModule,
     FormsModule,MatFormFieldModule,
     MatInputModule,MatDatepickerModule,
@@ -23,6 +24,7 @@ export class CycleSetup {
 
 constructor(private cycleService:CycleService,private router:Router){}
 
+today=new Date();
 
 cycleData={
   lastPeriodDate:null,
@@ -45,6 +47,7 @@ submit() {
     },
     error:(err)=>{
       console.log(err);
+      alert(err.error.message);
     }
   })
 }
