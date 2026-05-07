@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth-service';
 import { DashboardService } from '../../services/dashboard';
-
+import { gsap } from 'gsap';
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -13,7 +13,7 @@ import { DashboardService } from '../../services/dashboard';
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })
-export class Auth {
+export class Auth implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -22,6 +22,8 @@ export class Auth {
   ) {}
 
   isLoginMode = false;
+  validationErrors:any={};
+  apiError:string='';
 
   signUpData = {
     username: '',
@@ -42,6 +44,8 @@ export class Auth {
   };
 
   toggleMode() {
+    this.validationErrors={};
+    this.apiError='';
     this.isLoginMode = !this.isLoginMode;
   }
 
@@ -53,6 +57,116 @@ export class Auth {
     }
   }
 
+ngOnInit(): void {
+
+
+  gsap.from(
+
+    '.auth-card',
+
+    {
+
+      y:40,
+
+      opacity:0,
+
+      duration:1.2
+
+    }
+
+  );
+
+
+
+  gsap.from(
+
+    'h1',
+
+    {
+
+      scale:0.8,
+
+      opacity:0,
+
+      duration:1.5
+
+    }
+
+  );
+
+
+
+  gsap.to(
+
+    '.blob-1',
+
+    {
+
+      x:80,
+
+      y:50,
+
+      duration:6,
+
+      repeat:-1,
+
+      yoyo:true,
+
+      ease:'sine.inOut'
+
+    }
+
+  );
+
+
+
+  gsap.to(
+
+    '.blob-2',
+
+    {
+
+      x:-70,
+
+      y:-40,
+
+      duration:8,
+
+      repeat:-1,
+
+      yoyo:true,
+
+      ease:'sine.inOut'
+
+    }
+
+  );
+
+
+
+  gsap.to(
+
+    '.blob-3',
+
+    {
+
+      x:50,
+
+      y:-60,
+
+      duration:7,
+
+      repeat:-1,
+
+      yoyo:true,
+
+      ease:'sine.inOut'
+
+    }
+
+  );
+
+}
   signup() {
     this.authService.signUp(this.signUpData).subscribe({
       next: () => {
@@ -62,11 +176,15 @@ export class Auth {
         this.resetLoginForm();
         // Switch to login UI
         this.isLoginMode = true;
+        this.validationErrors={};
+        this.apiError='';
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.log(err);
-        alert('Signup failed!');
+        this.validationErrors=err.error;
+        this.apiError=err.error.message || ' ';
+        console.log("Validation error -> ",this.validationErrors);
         this.cdr.detectChanges();
       },
     });
@@ -78,7 +196,7 @@ export class Auth {
         console.log('Login successful!', res);
 
         localStorage.setItem('token', res.token);
-
+       this.apiError='';
         this.resetLoginForm();
         this.cdr.detectChanges();
         this.checkCycleData();
@@ -88,6 +206,8 @@ export class Auth {
         console.log(err);
 
         alert('Login failed');
+        this.validationErrors=err.error;
+        this.apiError=err.error.message || ' ';
         this.cdr.detectChanges();
       },
     });

@@ -1,73 +1,111 @@
 @if (isLoading) {
-  <h2>Loading dashboard...</h2>
+  <div class="min-h-screen flex items-center justify-center bg-pink-50">
+    <h2 class="text-2xl font-semibold animate-pulse">Loading your wellness dashboard 🌸</h2>
+  </div>
+
 } @else {
-  <div class="dashboard-container">
-    <button (click)="logout()">Logout</button>
-    <span>
-      <button (click)="gotoHistory()">History</button>
-    </span>
-    <span>
-      <button (click)="logNewPeriod()">Log New Period</button>
-    </span>
-    <span>
-      <button (click)="openAura()">Talk to Aura</button>
-    </span>
-    <h2>My Cycle Dashboard</h2>
+  <div class="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 p-6">
+    <!-- top navbar -->
 
-    <div class="card">
-      <p>
-        <strong>Period Start:</strong>
-        {{ dashboardData.periodStart }}
+    <div class="dashboard-header flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">🌸 Aura Wellness</h1>
+
+      <div class="flex gap-3">
+        <button (click)="gotoHistory()" class="bg-white px-4 py-2 rounded-xl shadow">
+          History
+        </button>
+
+        <button (click)="logNewPeriod()" class="bg-pink-500 text-white px-4 py-2 rounded-xl shadow">
+          Log Period
+        </button>
+
+        <button (click)="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-xl shadow">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- phase card -->
+
+    <div class="phase-card bg-white rounded-3xl p-8 shadow mb-8">
+      <h2 class="text-2xl font-semibold mb-4">
+        You're in
+
+        {{ dashboardData.currentPhase }}
+
+        🌸
+      </h2>
+
+      <p class="text-lg">
+        Day
+
+        {{ dashboardData.dayOfCycle }}
       </p>
 
-      <p>
-        <strong>Period End:</strong>
-        {{ dashboardData.periodEnd }}
-      </p>
+      <p class="mt-3">
+        Next period:
 
-      <p>
-        <strong>Ovulation Date:</strong>
-        {{ dashboardData.ovulationDate }}
-      </p>
-
-      <p>
-        <strong>Next Period:</strong>
         {{ dashboardData.nextPeriodDate }}
       </p>
-
-      <p>
-        <strong>Current Day:</strong>
-        Day {{ dashboardData.dayOfCycle }}
-      </p>
-
-      <p>
-        <strong>Current Phase:</strong>
-        {{ dashboardData.currentPhase }}
-      </p>
     </div>
 
-    <div class="card">
-      <h3>Recommended Workouts</h3>
+    <!-- info cards -->
 
-      <ul>
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="info-card bg-white rounded-3xl p-6 shadow">
+        <h3 class="text-xl font-semibold mb-4">📅 Cycle Info</h3>
+
+        <p>
+          Start:
+
+          {{ dashboardData.periodStart }}
+        </p>
+
+        <p>
+          End:
+
+          {{ dashboardData.periodEnd }}
+        </p>
+
+        <p>
+          Ovulation:
+
+          {{ dashboardData.ovulationDate }}
+        </p>
+      </div>
+
+      <div class="workout-card bg-white rounded-3xl p-6 shadow">
+        <h3 class="text-xl font-semibold mb-4">🏋️ Recommended Workouts</h3>
+
         @for (workout of dashboardData.workouts; track workout) {
-          <li>
-            {{ workout }}
-          </li>
+          <p class="mb-2">✨ {{ workout }}</p>
         }
-      </ul>
+      </div>
+
+      <div class="diet-card bg-white rounded-3xl p-6 shadow">
+        <h3 class="text-xl font-semibold mb-4">🥗 Recommended Diet</h3>
+
+        @for (food of dashboardData.diet; track food) {
+          <p class="mb-2">🍓 {{ food }}</p>
+        }
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Recommended Diet</h3>
+    <!-- aura card -->
 
-      <ul>
-        @for (food of dashboardData.diet; track food) {
-          <li>
-            {{ food }}
-          </li>
-        }
-      </ul>
+    <div
+      class="aura-card bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-3xl p-8 shadow"
+    >
+      <h2 class="text-2xl font-bold mb-4">Talk to Aura ✨</h2>
+
+      <p class="mb-4">Your personal menstrual wellness companion.</p>
+
+      <button
+        (click)="openAura()"
+        class="bg-white text-pink-500 px-6 py-3 rounded-xl font-semibold"
+      >
+        Start Chat
+      </button>
     </div>
   </div>
 }

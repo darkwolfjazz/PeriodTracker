@@ -1,40 +1,147 @@
-<div class="auth-container">
-  <h2>{{ isLoginMode ? 'Login' : 'Sign Up' }}</h2>
-  <form (ngSubmit)="onSubmit()">
-    @if(!isLoginMode){
-    <div>
-      <input type="text" placeholder="Username" 
-      [(ngModel)]="signUpData.username" name="signupUsername" 
-      />
-      <input type="text" placeholder="Password" 
-      [(ngModel)]="signUpData.password" name="signupPassword" 
-      />
-      <input type="number" placeholder="Age" 
-      [(ngModel)]="signUpData.age" name="age"
-      />
-      <input type="number" placeholder="Height (cm)" 
-      [(ngModel)]="signUpData.height" name="height"
-      />
-      <input type="number" placeholder="Weight (kg)" 
-      [(ngModel)]="signUpData.weight" name="Weight"
-      />
-    </div>
-}@else {
-    <input type="text" placeholder="Username" 
-    [(ngModel)]="loginData.username" name="loginUsername"
-    />
-    <input type="password" placeholder="Password" 
-    [(ngModel)]="loginData.password" name="loginPassword"
-    />
+<div
+  class="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 flex items-center justify-center p-4"
+>
+  <!-- background blobs -->
+
+  <div
+    class="blob-1 absolute w-72 h-72 bg-pink-500 rounded-full blur-3xl opacity-30 top-10 left-10"
+  ></div>
+
+  <div
+    class="blob-2 absolute w-72 h-72 bg-purple-500 rounded-full blur-3xl opacity-30 bottom-10 right-10"
+  ></div>
+
+   <div
+  class="blob-3 absolute w-72 h-72 bg-rose-500 rounded-full blur-3xl opacity-30 top-1/2 left-1/2"
+  >
+</div>
+  <!-- auth card -->
+
+  <div
+    class="auth-card relative bg-white/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 w-full max-w-md z-10"
+  >
+    <h1 class="text-3xl font-bold text-center mb-2">🌸 Aura</h1>
+
+    <p class="text-center mb-8 text-gray-600">Your personal wellness companion</p>
+
+    <h2 class="text-2xl font-semibold text-center mb-6">
+      {{ isLoginMode ? 'Welcome Back' : 'Create Account' }}
+    </h2>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      @if (!isLoginMode) {
+        <input
+          class="w-full p-4 rounded-2xl border outline-none focus:ring-2 focus:ring-pink-400"
+          type="text"
+          placeholder="Username"
+          [(ngModel)]="signUpData.username"
+          name="signupUsername"
+        />
+       @if(validationErrors?.username){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.username}}</p>
+        }
+
+
+
+        <input
+          class="w-full p-4 rounded-2xl border outline-none focus:ring-2 focus:ring-pink-400"
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="signUpData.password"
+          name="signupPassword"
+        />
+
+       @if(validationErrors?.password){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.password}}</p>
+        }
+
+        <input
+          class="w-full p-4 rounded-2xl border outline-none"
+          type="number"
+          placeholder="Age"
+          [(ngModel)]="signUpData.age"
+          name="age"
+        />
+
+        @if(validationErrors?.age){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.age}}</p>
+        }
+
+
+        <input
+          class="w-full p-4 rounded-2xl border outline-none"
+          type="number"
+          placeholder="Height (cm)"
+          [(ngModel)]="signUpData.height"
+          name="height"
+        />
+
+         @if(validationErrors?.height){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.height}}</p>
+        }
+
+        <input
+          class="w-full p-4 rounded-2xl border outline-none"
+          type="number"
+          placeholder="Weight (kg)"
+          [(ngModel)]="signUpData.weight"
+          name="weight"
+        />
+
+         @if(validationErrors?.weight){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.weight}}</p>
+        }
+      
+
+
+      } @else {
+        @if(apiError){
+          <p class="text-red-500 text-sm ml-2">{{apiError}}</p>
+         }
+        <input
+          class="w-full p-4 rounded-2xl border outline-none"
+          type="text"
+          placeholder="Username"
+          [(ngModel)]="loginData.username"
+          name="loginUsername"
+        />
+
+         @if(validationErrors?.username){
+       <p class="text-red-500 text-sm ml-2">{{validationErrors.username}}</p>
+        }
+
+        <input
+          class="w-full p-4 rounded-2xl border outline-none"
+          type="password"
+          placeholder="Password"
+          [(ngModel)]="loginData.password"
+          name="loginPassword"
+        />
+        @if(validationErrors?.password){
+      <p class="text-red-500 text-sm ml-2">{{validationErrors.password}}</p>
+
 }
-    <button type="submit">
-      {{ isLoginMode ? 'Login' : 'Sign Up' }}
-    </button>
-  </form>
-  <p (click)="toggleMode()" class="toggle-text">
-    {{ isLoginMode ? 'New user? Sign Up' : 'Already have an account? Login' }}
-  </p>
+      }
 
+      <button
+        type="submit"
+        class="submit-btn w-full
+         bg-pink-500
+         hover:bg-pink-600
+        text-white
+         p-4
+        rounded-2xl
+       font-semibold
+       hover:scale-105
+      duration-300
+      shadow-lg"
+      >
+        {{ isLoginMode ? 'Login' : 'Sign Up' }}
+      </button>
+    </form>
 
-
+    <p (click)="toggleMode()" class="mt-6 text-center cursor-pointer text-pink-600 font-medium">
+      {{ isLoginMode ? 'New here? Create account' : 'Already have an account? Login' }}
+    </p>
+  </div>
 </div>
