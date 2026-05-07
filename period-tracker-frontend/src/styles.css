@@ -1,1 +1,101 @@
 @import "tailwindcss";
+
+/* datepicker popup */
+
+.cdk-overlay-container
+.mat-datepicker-content{
+
+    background:
+
+    #ffffff !important;
+
+    border-radius:
+
+    20px !important;
+
+}
+
+
+
+/* calendar text */
+
+.cdk-overlay-container
+.mat-calendar-body-cell-content{
+
+    color:
+
+    #111827 !important;
+
+}
+
+
+
+/* month/year */
+
+.cdk-overlay-container
+.mat-calendar-period-button{
+
+    color:
+
+    #111827 !important;
+
+}
+
+
+
+/* arrows */
+
+.cdk-overlay-container
+.mat-calendar-previous-button,
+
+.cdk-overlay-container
+.mat-calendar-next-button{
+
+    color:
+
+    #111827 !important;
+
+}
+
+
+
+/* weekday labels */
+
+.cdk-overlay-container
+.mat-calendar-table-header th{
+
+    color:
+
+    #6b7280 !important;
+
+}
+
+
+
+/* selected day */
+
+.cdk-overlay-container
+.mat-calendar-body-selected{
+
+    background:
+
+    #ec4899 !important;
+
+    color:
+
+    white !important;
+
+}
+
+
+
+/* today circle */
+
+.cdk-overlay-container
+.mat-calendar-body-today{
+
+    border-color:
+
+    #ec4899 !important;
+
+}

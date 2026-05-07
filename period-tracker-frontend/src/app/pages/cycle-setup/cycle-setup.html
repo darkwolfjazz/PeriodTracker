@@ -1,39 +1,77 @@
-<div class="setup-container">
-  <button (click)="logout()">Logout</button>
-  <h2>Setup Your Cycle</h2>
+<div
+  class="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 dark:from-zinc-900 dark:to-purple-950 flex items-center justify-center p-4"
+>
+  <!-- floating blobs -->
 
-  <!-- Date Picker -->
-  <mat-form-field appearance="outline">
-    <mat-label>Last Period Date</mat-label>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      [max]="today"
-      [(ngModel)]="cycleData.lastPeriodDate"
+  <div
+    class="setup-blob-1 absolute top-10 left-10 w-72 h-72 bg-pink-400 rounded-full blur-3xl opacity-30"
+  ></div>
+
+  <div
+    class="setup-blob-2 absolute bottom-10 right-10 w-72 h-72 bg-purple-400 rounded-full blur-3xl opacity-30"
+  ></div>
+
+  <!-- card -->
+
+  <div
+    class="setup-card relative z-10 bg-white/70 dark:bg-zinc-800/70 backdrop-blur-xl rounded-3xl shadow-2xl p-8 w-full max-w-lg"
+  >
+    <!-- header -->
+
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-pink-100">🌸 Cycle Setup</h1>
+
+      <button
+        (click)="logout()"
+        class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl cursor-pointer"
+      >
+        Logout
+      </button>
+    </div>
+
+    <p class="text-gray-600 dark:text-gray-200 mb-8">Help Aura understand your cycle better ✨</p>
+
+    <!-- date -->
+
+    <mat-form-field appearance="outline" class="w-full mb-4 text-pink-100">
+      <mat-label> Last Period Date </mat-label>
+
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [max]="today"
+        [(ngModel)]="cycleData.lastPeriodDate"
+        />
+
+      <mat-datepicker-toggle matIconSuffix [for]="picker"> </mat-datepicker-toggle>
+
+      <mat-datepicker #picker> </mat-datepicker>
+    </mat-form-field>
+
+    <!-- cycle -->
+
+    <mat-form-field appearance="outline" class="w-full mb-4 text-pink-100">
+      <mat-label> Cycle Length </mat-label>
+
+      <input matInput type="number" [(ngModel)]="cycleData.cycleLength" />
+    </mat-form-field>
+
+    <!-- duration -->
+
+    <mat-form-field appearance="outline" class="w-full mb-8 text-pink-100">
+      <mat-label> Period Duration </mat-label>
+
+      <input matInput type="number" [(ngModel)]="cycleData.periodDuration" />
+    </mat-form-field>
+
+    <!-- button -->
+
+    <button
+      mat-raised-button
+      (click)="submit()"
+      class="save-btn w-full !bg-pink-500 !text-white !rounded-2xl !p-6 !text-lg"
     >
-    <mat-datepicker-toggle
-      matIconSuffix
-      [for]="picker">
-    </mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <!-- Cycle Length -->
-  <mat-form-field appearance="outline">
-    <mat-label>Cycle Length</mat-label>
-    <input
-      matInput
-      type="number"
-      [(ngModel)]="cycleData.cycleLength">
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-
-    <mat-label>Period Duration</mat-label>
-
-    <input
-      matInput
-      type="number"
-      [(ngModel)]="cycleData.periodDuration">
-  </mat-form-field>
-  <button mat-raised-button (click)="submit()">Save</button>
-
+      Save & Continue ✨
+    </button>
+  </div>
 </div>

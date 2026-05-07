@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -8,6 +8,7 @@ import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CycleService } from '../../services/cycle-service';
 import { Router } from '@angular/router';
+import { gsap } from 'gsap';
 @Component({
   selector: 'app-cycle-setup',
   standalone:true,
@@ -18,7 +19,7 @@ import { Router } from '@angular/router';
   templateUrl: './cycle-setup.html',
   styleUrl: './cycle-setup.css',
 })
-export class CycleSetup {
+export class CycleSetup implements OnInit {
 
 
 
@@ -30,6 +31,36 @@ cycleData={
   lastPeriodDate:null,
   cycleLength:null,
   periodDuration:null
+}
+
+ngOnInit(): void {
+  gsap.from(
+    '.setup-card',
+    {
+      y:40,
+      opacity:0,
+      duration:1
+    }
+  );
+  gsap.to(
+    '.setup-blob-1',
+    {
+      x:70,
+      y:40,
+      repeat:-1,
+      yoyo:true,
+      duration:6
+    });
+  gsap.to(
+    '.setup-blob-2',
+    {
+      x:-60,
+      y:-30,
+      repeat:-1,
+      yoyo:true,
+      duration:7
+    });
+
 }
 
 submit() {

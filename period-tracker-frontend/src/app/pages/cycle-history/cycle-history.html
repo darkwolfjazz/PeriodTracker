@@ -1,52 +1,117 @@
 @if (isLoading) {
-  <h2>Loading history...</h2>
+  <div
+    class="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 dark:from-zinc-900 dark:to-purple-950 flex items-center justify-center"
+  >
+    <h2 class="text-3xl text-pink-400 animate-pulse">Loading history...</h2>
+  </div>
 } @else {
-  <div class="history-container">
-     <button (click)="logout()">Logout</button>
-    <h2>🌸 Cycle History</h2>
+  <div
+    class="min-h-screen bg-gradient-to-br from-pink-50 to-purple-100 dark:from-zinc-900 dark:to-purple-950 p-6 relative overflow-hidden"
+  >
+    <!-- blobs -->
 
-    @for (cycle of history; track cycle.periodStart) {
-      <div class="history-card">
-        <p>
-          <strong> Period Start: </strong>
+    <div
+      class="history-blob-1 absolute top-10 left-10 w-72 h-72 bg-pink-400 rounded-full blur-3xl opacity-20"
+    ></div>
 
-          {{ cycle.periodStart }}
-        </p>
+    <div
+      class="history-blob-2 absolute bottom-10 right-10 w-72 h-72 bg-purple-400 rounded-full blur-3xl opacity-20"
+    ></div>
 
-        <p>
-          <strong> Period End: </strong>
+    <!-- header -->
 
-          {{ cycle.periodEnd }}
-        </p>
+    <div class="relative z-10 flex justify-between mb-8">
+      <h1 class="text-5xl font-bold text-white">🌸 Cycle History</h1>
 
-        <p>
-          <strong> Ovulation: </strong>
+      <button (click)="logout()" class="bg-white/20 text-white px-5 py-3 rounded-2xl">
+        Logout
+      </button>
+    </div>
 
-          {{ cycle.ovulationDate }}
-        </p>
+    <!-- stats -->
 
-        <p>
-          <strong> Next Period: </strong>
+    <div class="grid md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white/70 rounded-3xl p-6">
+        <p class="text-pink-500">Average Cycle</p>
 
-          {{ cycle.nextPeriodDate }}
-        </p>
+        <h2 class="text-3xl font-bold">
+          {{ averageCycle }}
+        </h2>
 
-        <p>
-          <strong> Cycle Length: </strong>
-
-          {{ cycle.cycleLength }}
-
-          days
-        </p>
-
-        <p>
-          <strong> Duration: </strong>
-
-          {{ cycle.periodDuration }}
-
-          days
-        </p>
+        <p>days</p>
       </div>
-    }
+
+      <div class="bg-white/70 rounded-3xl p-6">
+        <p class="text-pink-500">Average Period</p>
+
+        <h2 class="text-3xl font-bold">
+          {{ averagePeriod }}
+        </h2>
+
+        <p>days</p>
+      </div>
+
+      <div class="bg-white/70 rounded-3xl p-6">
+        <p class="text-pink-500">Total Cycles</p>
+
+        <h2 class="text-3xl font-bold">
+          {{ history.length }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- chart -->
+
+    <div class="bg-white/70 rounded-3xl p-6 mb-8">
+      <h2 class="text-2xl font-bold mb-4">📈 Cycle Trends</h2>
+
+      <canvas id="cycleChart"> </canvas>
+    </div>
+
+    <!-- history cards -->
+
+    <div class="grid md:grid-cols-2 gap-6">
+      @for (cycle of history; track cycle.periodStart) {
+        <div class="history-card bg-white/70 rounded-3xl p-6 shadow-xl">
+          <h3 class="text-xl font-bold text-pink-500 mb-4">
+            {{ cycle.periodStart }}
+          </h3>
+
+          <p>
+            🌸 End:
+
+            {{ cycle.periodEnd }}
+          </p>
+
+          <p>
+            🥚 Ovulation:
+
+            {{ cycle.ovulationDate }}
+          </p>
+
+          <p>
+            📅 Next:
+
+            {{ cycle.nextPeriodDate }}
+          </p>
+
+          <p>
+            🔄 Cycle:
+
+            {{ cycle.cycleLength }}
+
+            days
+          </p>
+
+          <p>
+            ❤️ Duration:
+
+            {{ cycle.periodDuration }}
+
+            days
+          </p>
+        </div>
+      }
+    </div>
   </div>
 }
