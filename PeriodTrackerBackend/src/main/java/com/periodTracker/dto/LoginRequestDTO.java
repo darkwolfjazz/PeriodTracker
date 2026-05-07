@@ -1,5 +1,6 @@
 package com.periodTracker.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class LoginRequestDTO {
 
+@NotBlank(message = "Username cannot be blank")
 private String username;
+@NotBlank(message = "Password cannot be empty")
 private String password;
 
 }

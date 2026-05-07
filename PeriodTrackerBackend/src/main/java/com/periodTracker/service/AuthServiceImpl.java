@@ -3,6 +3,7 @@ package com.periodTracker.service;
 import com.periodTracker.dto.LoginRequestDTO;
 import com.periodTracker.dto.LoginResponseDTO;
 import com.periodTracker.entity.User;
+import com.periodTracker.exceptions.AppExceptions;
 import com.periodTracker.repository.UserRepository;
 import com.periodTracker.utility.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDTO login(LoginRequestDTO request) {
         User user=userRepository.findByUsername(request.getUsername())
-                .orElseThrow(()->new RuntimeException("Username not found"));
+                .orElseThrow(()->new AppExceptions(404,"Username not found"));
      if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
-         throw new RuntimeException("Invalid credentials");
+         throw new AppExceptions(404,"Invalid credentials");
      }
 
      String token= jwtUtil.generateToken(user.getUsername());

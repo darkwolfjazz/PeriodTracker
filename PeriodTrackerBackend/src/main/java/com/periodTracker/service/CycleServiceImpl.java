@@ -4,6 +4,7 @@ import com.periodTracker.dto.*;
 import com.periodTracker.entity.Cycle;
 import com.periodTracker.entity.Profile;
 import com.periodTracker.entity.User;
+import com.periodTracker.exceptions.AppExceptions;
 import com.periodTracker.repository.CycleRepository;
 import com.periodTracker.repository.ProfileRepository;
 import com.periodTracker.repository.UserRepository;
@@ -39,7 +40,7 @@ public class CycleServiceImpl implements CycleService {
         System.out.println("Principal is : " +user);
         //fetching profile
         Profile profile=profileRepository
-                .findByUserUserId(user.getUserId()).orElseThrow(()->new RuntimeException("Profile not found"));
+                .findByUserUserId(user.getUserId()).orElseThrow(()->new AppExceptions(404,"Profile not found"));
         int cycleLength = request.getCycleLength() != null
                 ? request.getCycleLength()
                 : profile.getCycleLength() != null
@@ -58,14 +59,14 @@ public class CycleServiceImpl implements CycleService {
 
         LocalDate startDate=request.getLastPeriodDate();
         if(startDate.isAfter(LocalDate.now())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Period start date cannot be a future date");
+            throw new AppExceptions(404,"Period start date cannot be a future date");
         }
 
         List<Cycle>existingCycle=cycleRepository.findByUserUserIdOrderByStartDateDesc(user.getUserId());
         if(!existingCycle.isEmpty()){
             Cycle latestCycle=existingCycle.get(0);
             if(!startDate.isAfter(latestCycle.getStartDate())){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"New Period must be after previous cycle");
+                throw new AppExceptions(404,"New Period must be after previous cycle");
             }
         }
 
@@ -175,7 +176,7 @@ public class CycleServiceImpl implements CycleService {
 
         System.out.println("Cycle count:" +cycles.size());
         if (cycles.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No cycle data");
+            throw new AppExceptions(404,"No cycle data");
         }
 
         Cycle latestCycle = cycles.get(0);

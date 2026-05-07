@@ -5,6 +5,7 @@ import com.periodTracker.dto.AiChatResponseDTO;
 import com.periodTracker.entity.Cycle;
 import com.periodTracker.entity.Profile;
 import com.periodTracker.entity.User;
+import com.periodTracker.exceptions.AppExceptions;
 import com.periodTracker.repository.CycleRepository;
 import com.periodTracker.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class AiServiceImpl implements AiService {
         Profile profile=profileRepository.findByUserUserId(user.getUserId()).orElseThrow();
        List<Cycle>cycles=cycleRepository.findByUserUserIdOrderByStartDateDesc(user.getUserId());
        if(cycles.isEmpty()){
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Please complete your cycle setup first");
+           throw new AppExceptions(404,"Please complete your cycle setup first");
        }
        Cycle latestCycle=cycles.get(0);
         long days= ChronoUnit.DAYS.between(latestCycle.getStartDate(), LocalDate.now());
